@@ -1,9 +1,3 @@
-# [Python pygame Game] 4 Beats
-# made by "PrintedLove"
-# https://printed.tistory.com/
-# This game was created with reference to ParkJuneWoo(korca0220)'s [Finding-the-Rabbit]
-#-*-coding: utf-8
-
 import pygame as pg
 import os, time, random
 
