@@ -1,3 +1,9 @@
+# [Python pygame Game] Circle Beats
+# made by "Nhom 12"
+#Leader: Le Thi Minh Anh
+#Member: Nguyen Thi Nguyen Dieu
+#-*-coding: utf-8
+
 import pygame as pg
 import os, time, random
 
