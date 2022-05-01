@@ -1,7 +1,7 @@
 import pygame as pg
 import os, time, random
 
-TITLE = "4 Beats"       ### default setting
+TITLE = "Circle Beats"       ### default setting
 WIDTH = 640
 HEIGHT = 480
 FPS = 60
@@ -203,7 +203,7 @@ class Game:
                         elif self.screen_value[1] == 3:     #EXIT
                             self.screen_value[2] = 3
                         else:                               #Languague
-                            self.language_mode = self.language_mode + 1 if self.language_mode < len(self.language_list) - 1 else 0
+                            #self.language_mode = self.language_mode + 1 if self.language_mode < len(self.language_list) - 1 else 0
                             self.gameFont = os.path.join(self.fnt_dir, self.load_language(1))
             elif self.screen_value[2] == 1:
                 if self.screen_value[0] > 0:
