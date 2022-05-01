@@ -7,7 +7,7 @@ TITLE = "4 Beats - Make Song Data"       ### default setting
 WIDTH = 640
 HEIGHT = 480
 FPS = 60
-DEFAULT_FONT = "Manrope-VariableFont_wght.ttf"
+DEFAULT_FONT = "NotoSansCJKkr-Regular.otf"
 
 WHITE = (238, 238, 238)     ### color setting
 BLACK = (32, 36, 32)
@@ -62,7 +62,7 @@ class Game:
         mouse_coord = pg.mouse.get_pos()    #mouse coord value
         mouse_move = False      #mouse move Boolean value
         mouse_click = 0         #mouse click value (1: left, 2: scroll, 3: right, 4: scroll up, 5: scroll down)
-        key_click = 0           #key value (275: right, 276: left, 273: up, 274: down, 13: enter)
+        key_click = 0           #key value (100: right, 97: left, 119: up, 115: down, 13: enter)
 
         for event in pg.event.get():                        ### Event Check
             if event.type == pg.QUIT:       #exit
@@ -107,9 +107,9 @@ class Game:
 
             print(self.shot_text[0] + self.shot_text[1] + self.shot_text[2])
 
-        if key_click == 276:              #key check
+        if key_click == 97:              #key check
             self.circle_dir += 1
-        elif key_click == 275:
+        elif key_click == 100:
             self.circle_dir -= 1
 
         if self.circle_dir > 4:         #circle direction management

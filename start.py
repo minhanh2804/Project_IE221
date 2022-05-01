@@ -5,7 +5,7 @@ TITLE = "Circle Beats"       ### default setting
 WIDTH = 640
 HEIGHT = 480
 FPS = 60
-DEFAULT_FONT = "FZ SlugHalf.ttf"
+DEFAULT_FONT = "NotoSansCJKkr-Regular.otf"
 
 WHITE = (238, 238, 238)     ### color setting
 BLACK = (32, 36, 32)
@@ -126,7 +126,7 @@ class Game:
         mouse_coord = pg.mouse.get_pos()    #mouse coord value
         mouse_move = False      #mouse move Boolean value
         mouse_click = 0         #mouse click value (1: left, 2: scroll, 3: right, 4: scroll up, 5: scroll down)
-        key_click = 0           #key value (275: right, 276: left, 273: up, 274: down, 13: enter)
+        key_click = 0           #key value (100: right, 97: left, 119: up, 115: down, 13: enter)
 
         for event in pg.event.get():                        ### Event Check
             if event.type == pg.QUIT:       #exit
@@ -189,12 +189,12 @@ class Game:
                         if mouse_move and 400 < mouse_coord[0] < 560 and 105 + i*70 < mouse_coord[1] < 155 + i*70:      #mouse cursor check
                             self.screen_value[1] = i + 1
 
-                    if (key_click == 273 or mouse_click == 4) and self.screen_value[1] > 1:     #key up check
+                    if (key_click == 119 or mouse_click == 4) and self.screen_value[1] > 1:     #key up check
                         self.screen_value[1] -= 1
-                    elif (key_click == 274 or mouse_click == 5) and self.screen_value[1] < 4:   #key down check
+                    elif (key_click == 115 or mouse_click == 5) and self.screen_value[1] < 4:   #key down check
                         self.screen_value[1] += 1
 
-                    if (mouse_click == 1 or key_click == 13 or key_click == 275):      #click or key enter, key right check
+                    if (mouse_click == 1 or key_click == 13 or key_click == 100):      #click or key enter, key right check
                         if self.screen_value[1] == 1:       #START
                             self.screen_value[2] = 1
                         elif self.screen_value[1] == 2:     #HELP
@@ -203,7 +203,7 @@ class Game:
                         elif self.screen_value[1] == 3:     #EXIT
                             self.screen_value[2] = 3
                         else:                               #Languague
-                            #self.language_mode = self.language_mode + 1 if self.language_mode < len(self.language_list) - 1 else 0
+                            self.language_mode = self.language_mode + 1 if self.language_mode < len(self.language_list) - 1 else 0
                             self.gameFont = os.path.join(self.fnt_dir, self.load_language(1))
             elif self.screen_value[2] == 1:
                 if self.screen_value[0] > 0:
@@ -258,18 +258,18 @@ class Game:
                             self.screen_value[2] = 1
                     elif self.screen_value[1] == 4:
                         self.screen_value[2] = 2
-                elif key_click == 273 or mouse_click == 4:     #key check
+                elif key_click == 119 or mouse_click == 4:     #key check
                     if self.song_select > 1:
                         self.song_select -= 1
                         songChange = True
-                elif key_click == 274 or mouse_click == 5:
+                elif key_click == 115 or mouse_click == 5:
                     if self.song_select < self.song_num:
                         self.song_select += 1
                         songChange = True
-                elif key_click == 275 or key_click == 13:
+                elif key_click == 100 or key_click == 13:
                     if self.song_highScore[self.song_select - 1] != -1:
                         self.screen_value[2] = 1
-                elif key_click == 276:
+                elif key_click == 97:
                     self.screen_value[2] = 2
 
                 if songChange:
@@ -305,9 +305,9 @@ class Game:
                         self.circle_dir += 1
                     else:
                         self.circle_dir -= 1
-                elif key_click == 276:              #key check
+                elif key_click == 97:              #key check
                     self.circle_dir += 1
-                elif key_click == 275:
+                elif key_click == 100:
                     self.circle_dir -= 1
 
                 if self.circle_dir > 4:         #circle direction management
@@ -354,9 +354,9 @@ class Game:
 
                 if (mouse_click == 1):              #mouse clickcheck
                     self.screen_value[1] = self.screen_value[2]
-                elif key_click == 276 or mouse_click == 4:     #key check
+                elif key_click == 97 or mouse_click == 4:     #key check
                     self.screen_value[2] = 1
-                elif key_click == 275 or mouse_click == 5:
+                elif key_click == 100 or mouse_click == 5:
                     self.screen_value[2] = 2
                 elif key_click == 13:
                     self.screen_value[1] = self.screen_value[2]
