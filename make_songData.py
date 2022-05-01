@@ -7,7 +7,7 @@ TITLE = "4 Beats - Make Song Data"       ### default setting
 WIDTH = 640
 HEIGHT = 480
 FPS = 60
-DEFAULT_FONT = "Manrope-VariableFont_wght.ttf"
+DEFAULT_FONT = "FZ SlugHalf.ttf"
 
 WHITE = (238, 238, 238)     ### color setting
 BLACK = (32, 36, 32)
