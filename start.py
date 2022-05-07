@@ -428,14 +428,15 @@ class Game:
                 self.draw_text(self.load_language(0), 24, BLACK, 480, 315, screen_alpha, select_index[3])
         elif self.screen_mode == 3:     #song select screen
             surface = pg.Surface((WIDTH, HEIGHT))
-            surface.fill(WHITE)
+            bg = pg.image.load("bg.png")
+            surface.blit(bg,(0,0))
             surface.set_alpha(max(screen_alpha - 50, 0))
             circle_coord = (round(WIDTH * 1.2), round(HEIGHT / 2))
-            pg.draw.circle(surface, BLACK, circle_coord, round(0.78 * WIDTH + screen_alpha), 1)
-            pg.draw.circle(surface, BLACK, circle_coord, round(0.32 * WIDTH + screen_alpha), 1)
-            pg.draw.circle(surface, BLACK, circle_coord, max(round(-0.1 * WIDTH + screen_alpha), 1), 1)
-            pg.draw.circle(surface, RED, circle_coord, max(round(-0.12 * WIDTH + screen_alpha), 1), 1)
-            pg.draw.circle(surface, BLUE, circle_coord, max(round(-0.08 * WIDTH + screen_alpha), 1), 1)
+            # pg.draw.circle(surface, BLACK, circle_coord, round(0.78 * WIDTH + screen_alpha), 1)
+            # pg.draw.circle(surface, BLACK, circle_coord, round(0.32 * WIDTH + screen_alpha), 1)
+            # pg.draw.circle(surface, BLACK, circle_coord, max(round(-0.1 * WIDTH + screen_alpha), 1), 1)
+            # pg.draw.circle(surface, RED, circle_coord, max(round(-0.12 * WIDTH + screen_alpha), 1), 1)
+            # pg.draw.circle(surface, BLUE, circle_coord, max(round(-0.08 * WIDTH + screen_alpha), 1), 1)
             self.screen.blit(surface, (0,0))
 
             if self.song_select > 2:
@@ -469,10 +470,10 @@ class Game:
 
                     font.set_bold(True)
                     cleartext_surface = font.render(self.load_language(14), False, BLUE)
-                    rotated_surface = pg.transform.rotate(cleartext_surface, 25)
+                    rotated_surface = pg.transform.rotate(cleartext_surface, 0)
                     rotated_surface.set_alpha(max(screen_alpha - 180, 0))
                     cleartext_rect = rotated_surface.get_rect()
-                    cleartext_rect.midtop = (round(0.71 * WIDTH), round(HEIGHT / 2 - 150))
+                    cleartext_rect.midtop = (round(0.71 * WIDTH), round(HEIGHT / 2 - 25))
                     self.screen.blit(rotated_surface, cleartext_rect)
 
                 self.draw_text(self.load_language(8), 28, BLACK, 0.69 * WIDTH, HEIGHT / 2 - 130, screen_alpha)
@@ -721,6 +722,7 @@ class Shot(pg.sprite.Sprite):           ####################################### 
                     self.game.sound_drum4.play()
             else:
                 self.correct = -1
+
 
 game = Game()
 
