@@ -20,25 +20,25 @@ class Game:
         pg.mixer.init()     #sound mixer
         pg.display.set_caption(TITLE)       #title name
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))      #screen size
-        self.screen_mode = 0    #screen mode (0: logo, 1: logoback, 2: main, 3: stage select, 4: play, 5: score)
+        self.screen_mode = 0    #screen mode (0: welcome screen, 1: logo screen, 2: menu, 3: song select, 4: play, 5: score)
         self.screen_value = [-ALPHA_MAX, 0, 0, 0]       #screen management value
         self.clock = pg.time.Clock()        #FPS timer
         self.start_tick = 0     #game timer
         self.running = True     #game initialize Boolean value
         self.language_mode = 0
         self.song_select = 1    #select song
-        self.load_date()        #data loading
+        self.load_data()        #data loading
         self.new()
-        pg.mixer.music.load(self.bg_main)
+        pg.mixer.music.load(self.start_bgm)
 
-    def load_date(self): # Data Loading
+    def load_data(self): # Data Loading
         self.dir = os.path.dirname(__file__)
 
         # font
-        self.fnt_dir = os.path.join(self.dir, 'font')
-        self.gameFont = os.path.join(self.fnt_dir, DEFAULT_FONT)
+        self.font_dir = os.path.join(self.dir, 'font')
+        self.gameFont = os.path.join(self.font_dir, DEFAULT_FONT)
 
-        with open(os.path.join(self.fnt_dir, 'language.ini'), "r", encoding = 'UTF-8') as language_file:
+        with open(os.path.join(self.font_dir, 'language.ini'), "r", encoding = 'UTF-8') as language_file:
             language_lists = language_file.read().split('\n')
 
         self.language_list = [n.split("_") for n in language_lists]
@@ -46,20 +46,19 @@ class Game:
         # image
         self.img_dir = os.path.join(self.dir, 'image')
         pg.display.set_icon(pg.image.load(os.path.join(self.img_dir, 'icon.png')))      #set icon
-        self.spr_printed = pg.image.load(os.path.join(self.img_dir, 'printed.png'))
         self.spr_logoback = pg.image.load(os.path.join(self.img_dir, 'logoback.png'))
         self.spr_logo = pg.image.load(os.path.join(self.img_dir, 'logo.png'))
         self.spr_circle = pg.image.load(os.path.join(self.img_dir, 'circle.png'))
         self.spr_shot = Spritesheet.Spritesheet(os.path.join(self.img_dir, 'shot.png'))
 
         # sound
-        self.snd_dir = os.path.join(self.dir, 'sound')
-        self.bg_main = os.path.join(self.snd_dir, 'bg_main.ogg')
-        self.sound_click = pg.mixer.Sound(os.path.join(self.snd_dir, 'click.ogg'))
-        self.sound_drum1 = pg.mixer.Sound(os.path.join(self.snd_dir, 'drum1.ogg'))
-        self.sound_drum2 = pg.mixer.Sound(os.path.join(self.snd_dir, 'drum2.ogg'))
-        self.sound_drum3 = pg.mixer.Sound(os.path.join(self.snd_dir, 'drum3.ogg'))
-        self.sound_drum4 = pg.mixer.Sound(os.path.join(self.snd_dir, 'drum4.ogg'))
+        self.sound_dir = os.path.join(self.dir, 'sound')
+        self.start_bgm = os.path.join(self.sound_dir, 'start_bgm.ogg')
+        self.sound_click = pg.mixer.Sound(os.path.join(self.sound_dir, 'click.ogg'))
+        self.sound_drum1 = pg.mixer.Sound(os.path.join(self.sound_dir, 'drum1.ogg'))
+        self.sound_drum2 = pg.mixer.Sound(os.path.join(self.sound_dir, 'drum2.ogg'))
+        self.sound_drum3 = pg.mixer.Sound(os.path.join(self.sound_dir, 'drum3.ogg'))
+        self.sound_drum4 = pg.mixer.Sound(os.path.join(self.sound_dir, 'drum4.ogg'))
 
         # song
         self.sng_dir = os.path.join(self.dir, 'song')
@@ -205,7 +204,7 @@ class Game:
                             self.screen_value[2] = 3
                         else:                               #Languague
                             self.language_mode = self.language_mode + 1 if self.language_mode < len(self.language_list) - 1 else 0
-                            self.gameFont = os.path.join(self.fnt_dir, self.load_language(1))
+                            self.gameFont = os.path.join(self.font_dir, self.load_language(1))
             elif self.screen_value[2] == 1:
                 if self.screen_value[0] > 0:
                     self.screen_value[0] -= ALPHA_MAX / 15
@@ -294,54 +293,59 @@ class Game:
                         self.screen_value[1] = 0
                         self.screen_value[2] = 0
                         self.screen_value[3] = ALPHA_MAX
-                        pg.mixer.music.load(self.bg_main)
+                        pg.mixer.music.load(self.start_bgm)
                         pg.mixer.music.play(loops = -1)
-        elif self.screen_mode == 4:                             ### Play Screen
-            if self.screen_value[1] == 0:
-                if self.screen_value[0] < ALPHA_MAX:
-                    self.screen_value[0] += ALPHA_MAX / 15
+        elif self.screen_mode == 4:
+            if(key_click == 27):
+                self.new()
+                self.load_data()
+                self.screen_mode = 3
+            elif(self.screen_mode == 4):                             ### Play Screen
+                if self.screen_value[1] == 0:
+                    if self.screen_value[0] < ALPHA_MAX:
+                        self.screen_value[0] += ALPHA_MAX / 1
 
-                if (mouse_click == 1):              #mouse clickcheck
-                    if mouse_coord[0] < WIDTH / 2:
+                    if (mouse_click == 1):              #mouse clickcheck
+                        if mouse_coord[0] < WIDTH / 2:
+                            self.circle_dir += 1
+                        else:
+                            self.circle_dir -= 1
+                    elif key_click == 97:              #key check
                         self.circle_dir += 1
-                    else:
+                    elif key_click == 100:
                         self.circle_dir -= 1
-                elif key_click == 97:              #key check
-                    self.circle_dir += 1
-                elif key_click == 100:
-                    self.circle_dir -= 1
 
-                if self.circle_dir > 4:         #circle direction management
-                    self.circle_dir = 1
-                elif self.circle_dir < 1:
-                    self.circle_dir = 4
+                    if self.circle_dir > 4:         #circle direction management
+                        self.circle_dir = 1
+                    elif self.circle_dir < 1:
+                        self.circle_dir = 4
 
-                rotToDir = (self.circle_dir - 1) * 90       #circle rotation management
+                    rotToDir = (self.circle_dir - 1) * 90       #circle rotation management
 
-                if self.circle_rot != rotToDir:
-                    if self.circle_rot >= rotToDir:
-                        if self.circle_rot >= 270 and rotToDir == 0:
-                            self.circle_rot += 15
+                    if self.circle_rot != rotToDir:
+                        if self.circle_rot >= rotToDir:
+                            if self.circle_rot >= 270 and rotToDir == 0:
+                                self.circle_rot += 15
+                            else:
+                                self.circle_rot -= 15
                         else:
-                            self.circle_rot -= 15
-                    else:
-                        if self.circle_rot == 0 and rotToDir == 270:
-                            self.circle_rot = 345
-                        else:
-                            self.circle_rot += 15
+                            if self.circle_rot == 0 and rotToDir == 270:
+                                self.circle_rot = 345
+                            else:
+                                self.circle_rot += 15
 
-                if self.circle_rot < 0:
-                    self.circle_rot = 345
-                elif self.circle_rot > 345:
-                    self.circle_rot = 0
+                    if self.circle_rot < 0:
+                        self.circle_rot = 345
+                    elif self.circle_rot > 345:
+                        self.circle_rot = 0
 
-                self.create_shot()          #create shot
-            else:
-                if self.screen_value[0] > 0:
-                    self.screen_value[0] -= ALPHA_MAX / 85
+                    self.create_shot()          #create shot
                 else:
-                    self.screen_mode = 5
-                    self.screen_value[1] = 0
+                    if self.screen_value[0] > 0:
+                        self.screen_value[0] -= ALPHA_MAX / 85
+                    else:
+                        self.screen_mode = 5
+                        self.screen_value[1] = 0
         else:                             # Score Screen
             if self.screen_value[1] == 0:
                 if self.screen_value[0] < ALPHA_MAX:
@@ -390,8 +394,10 @@ class Game:
         screen_alpha = self.screen_value[0]
 
         if self.screen_mode == 0:       #logo screen1
-            screen_alpha = ALPHA_MAX - min(max(self.screen_value[0], 0), ALPHA_MAX)
-            self.draw_sprite(((WIDTH - 454) / 2, (HEIGHT - 79) / 2), self.spr_printed, screen_alpha)
+            surface = pg.Surface((WIDTH, HEIGHT))
+            bg = pg.image.load(os.path.join(self.img_dir, 'bg_start.png'))
+            surface.blit(bg,(0,0))
+            self.screen.blit(surface, (0,0))
         elif self.screen_mode == 1:     #logo screen2
             self.spr_logoback.set_alpha(screen_alpha) if self.screen_value[3] == 0 else self.spr_logoback.set_alpha(ALPHA_MAX)
             self.screen.blit(self.spr_logoback, (0, 0))
@@ -456,7 +462,7 @@ class Game:
                     try:
                         font = pg.font.Font(self.gameFont, 60)
                     except:
-                        font = pg.font.Font(os.path.join(self.fnt_dir, DEFAULT_FONT), 36)
+                        font = pg.font.Font(os.path.join(self.font_dir, DEFAULT_FONT), 36)
 
                     font.set_bold(True)
                     cleartext_surface = font.render(self.load_language(14), False, MAROON)
@@ -490,13 +496,20 @@ class Game:
             self.draw_text(score_str, 24, BLACK, WIDTH - 10 - len(score_str) * 6, 15, screen_alpha)
         else:
             surface = pg.Surface((WIDTH, HEIGHT))
-            surface.fill(WHITE)
-            surface.set_alpha(max(screen_alpha - 50, 0))
-            circle_coord = (round(WIDTH / 2), round(HEIGHT / 2))
-            self.screen.blit(surface, (0,0))
-            self.draw_text(self.load_language(15) + " : " + str(self.song_perfectScore[self.song_select - 1]), 32, BLACK, WIDTH / 2, HEIGHT / 2 - 65, screen_alpha)
-            self.draw_text("Your " + self.load_language(13) + " : " + str(self.score), 32, BLACK, WIDTH / 2, HEIGHT / 2 - 5, screen_alpha)
+            if self.score>= self.song_perfectScore[self.song_select - 1]:
+                bg = pg.image.load(os.path.join(self.img_dir, 'bg_end_done.png'))
+                surface.blit(bg,(0,0))
+                self.screen.blit(surface, (0,0))
+            # surface.set_alpha(max(screen_alpha - 50, 0))
+            # circle_coord = (round(WIDTH / 2), round(HEIGHT / 2))
+            else:
+                bg = pg.image.load(os.path.join(self.img_dir, 'bg_end_cry.png'))
+                surface.blit(bg,(0,0))
+                self.screen.blit(surface, (0,0))
+                self.draw_text(self.load_language(15) + " : " + str(self.song_perfectScore[self.song_select - 1]), 32, BLACK, WIDTH / 2, HEIGHT / 2 - 65, screen_alpha)
+                self.draw_text("Your " + self.load_language(13) + " : " + str(self.score), 32, BLACK, WIDTH / 2, HEIGHT / 2 - 5, screen_alpha)
             select_index = [True if self.screen_value[2] == i + 1 else False for i in range(2)]
+            # self.screen.blit(surface, (0,0))
             self.draw_text(self.load_language(17), 24, BLACK, WIDTH / 2 - 100, HEIGHT / 2 + 125, ALPHA_MAX, select_index[0])
             self.draw_text(self.load_language(16), 24, BLACK, WIDTH / 2 + 100, HEIGHT / 2 + 125, ALPHA_MAX, select_index[1])
 
@@ -601,7 +614,7 @@ class Game:
         try:
             font = pg.font.Font(self.gameFont, size)
         except:
-            font = pg.font.Font(os.path.join(self.fnt_dir, DEFAULT_FONT), size)
+            font = pg.font.Font(os.path.join(self.font_dir, DEFAULT_FONT), size)
 
         font.set_underline(boldunderline)
         font.set_bold(boldunderline)
