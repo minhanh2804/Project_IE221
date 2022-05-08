@@ -53,12 +53,14 @@ class Game:
 
         # sound
         self.sound_dir = os.path.join(self.dir, 'sound')
-        self.start_bgm = os.path.join(self.sound_dir, 'start_bgm.ogg')
+        self.start_bgm = os.path.join(self.sound_dir, 'start_bgm.mp3')
+        self.sound_win = os.path.join(self.sound_dir, 'win.wav')
+        self.sound_lose = os.path.join(self.sound_dir, 'lose.wav')
         self.sound_click = pg.mixer.Sound(os.path.join(self.sound_dir, 'click.ogg'))
-        self.sound_drum1 = pg.mixer.Sound(os.path.join(self.sound_dir, 'drum1.ogg'))
-        self.sound_drum2 = pg.mixer.Sound(os.path.join(self.sound_dir, 'drum2.ogg'))
-        self.sound_drum3 = pg.mixer.Sound(os.path.join(self.sound_dir, 'drum3.ogg'))
-        self.sound_drum4 = pg.mixer.Sound(os.path.join(self.sound_dir, 'drum4.ogg'))
+        self.sound_drum1 = pg.mixer.Sound(os.path.join(self.sound_dir, 'drum1.wav'))
+        self.sound_drum2 = pg.mixer.Sound(os.path.join(self.sound_dir, 'drum2.wav'))
+        self.sound_drum3 = pg.mixer.Sound(os.path.join(self.sound_dir, 'drum3.wav'))
+        self.sound_drum4 = pg.mixer.Sound(os.path.join(self.sound_dir, 'drum4.mp3'))
 
         # song
         self.sng_dir = os.path.join(self.dir, 'song')
@@ -500,14 +502,16 @@ class Game:
                 bg = pg.image.load(os.path.join(self.img_dir, 'bg_end_done.png'))
                 surface.blit(bg,(0,0))
                 self.screen.blit(surface, (0,0))
-            # surface.set_alpha(max(screen_alpha - 50, 0))
-            # circle_coord = (round(WIDTH / 2), round(HEIGHT / 2))
+                pg.mixer.music.load(self.start_bgm)
+                pg.mixer.music.play()
             else:
                 bg = pg.image.load(os.path.join(self.img_dir, 'bg_end_cry.png'))
                 surface.blit(bg,(0,0))
                 self.screen.blit(surface, (0,0))
                 self.draw_text(self.load_language(15) + " : " + str(self.song_perfectScore[self.song_select - 1]), 32, BLACK, WIDTH / 2, HEIGHT / 2 - 65, screen_alpha)
                 self.draw_text("Your " + self.load_language(13) + " : " + str(self.score), 32, BLACK, WIDTH / 2, HEIGHT / 2 - 5, screen_alpha)
+                pg.mixer.music.load(self.start_bgm)
+                pg.mixer.music.play()
             select_index = [True if self.screen_value[2] == i + 1 else False for i in range(2)]
             # self.screen.blit(surface, (0,0))
             self.draw_text(self.load_language(17), 24, BLACK, WIDTH / 2 - 100, HEIGHT / 2 + 125, ALPHA_MAX, select_index[0])
