@@ -5,11 +5,11 @@ HEIGHT = 480
 VALUE_MAX = 255
 
 class Shot(pg.sprite.Sprite):          # Shot Class
-"""
-    This class is designed to manage the shot operation (color, mode, direction, speed)
-"""
+    """
+        This class is designed to manage the shot operation (color, mode, direction, speed)
+    """
     def __init__(self, game, color, mode, direction, speed):      #color(WBDR) mode(DRUL) direction(DRUL)
-    """This function initializes variables for operating process"""
+        """This function initializes variables for operating process"""
         pg.sprite.Sprite.__init__(self)
         self.game = game
         self.color = color

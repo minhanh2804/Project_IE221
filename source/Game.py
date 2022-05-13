@@ -15,19 +15,20 @@ MAROON = (128, 0, 0)
 VALUE_MAX = 255
 
 class Game:
-    """This class is used for control all of the user's action done on game's window
-
-       """
+    """
+    This class is used for control all of the user's action done on game's window
+    """
     def __init__(self): # Game Start
-    """  This class has the common variables is:
-      - self.screen: set up screen size
-      -  self.screen: set up the mode of screens that are setting in our gameF
-      - self.screen_value: manage the screen value matrix
-      - self.clock:  using the module clock in order to compute the time when the game starts
-      - self.running: the boolean value for initialize the game
-      - self.language_mode: set up the type of language that is provide for user
-      - self.song_select: manage the song is chosen
-      """
+        """
+        This class has the common variables is:
+          - self.screen: set up screen size
+          -  self.screen: set up the mode of screens that are setting in our gameF
+          - self.screen_value: manage the screen value matrix
+          - self.clock:  using the module clock in order to compute the time when the game starts
+          - self.running: the boolean value for initialize the game
+          - self.language_mode: set up the type of language that is provide for user
+          - self.song_select: manage the song is chosen
+        """
         pg.init()
         pg.mixer.init()     #sound mixer
         pg.display.set_caption(TITLE)       #title name
@@ -115,15 +116,15 @@ class Game:
                 self.song_dataPath.append(-1)
 
     def new(self):      # Game Initialize
-    """
-        This function is used for initializing the game when user start playing the game
-        This function includes these parameters:
-          - self.song_data: save the data of list song
-          - self.song_dataLen: save the length of list song_data
-          - self.song_dataIndex: save the index of song that is in the song data list
-          - self.circle_dir: save the direction of the circle when user play the game
-          - self.circle_rot: save the rotation value corresponding to the value of circle direction
-    """
+        """
+            This function is used for initializing the game when user start playing the game
+            This function includes these parameters:
+              - self.song_data: save the data of list song
+              - self.song_dataLen: save the length of list song_data
+              - self.song_dataIndex: save the index of song that is in the song data list
+              - self.circle_dir: save the direction of the circle when user play the game
+              - self.circle_rot: save the rotation value corresponding to the value of circle direction
+        """
         self.song_data = list()     #song data list
         self.song_dataLen = 0       #song data len
         self.song_dataIndex = 0     #song data index
@@ -134,14 +135,14 @@ class Game:
         self.shots = pg.sprite.Group()
 
     def run(self):      # Game Loop
-    """
-        This function is used for keeping game playing unless user choses to exit with options are provided in the game
-        Moreover this function also term the way that game is operated such as:
-        - Move to other screen
-        - Catch the user's actions
-        - Catch the mouse's position
-        In conclusion this function stipulate out the logic of operating way of whole game
-    """
+        """
+            This function is used for keeping game playing unless user choses to exit with options are provided in the game
+            Moreover this function also term the way that game is operated such as:
+            - Move to other screen
+            - Catch the user's actions
+            - Catch the mouse's position
+            In conclusion this function stipulate out the logic of operating way of whole game
+        """
         self.playing = True
 
         while self.playing:
@@ -161,13 +162,13 @@ class Game:
         self.game_tick = pg.time.get_ticks() - self.start_tick      #play time calculation
 
     def events(self):   # Game Loop - Events
-    """
-        This function also term the way that game is operated such as:
-        - Move to other screen
-        - Catch the user's actions
-        - Catch the mouse's position
-        In conclusion this function stipulate out the logic of operating way of whole game
-    """
+        """
+            This function also term the way that game is operated such as:
+            - Move to other screen
+            - Catch the user's actions
+            - Catch the mouse's position
+            In conclusion this function stipulate out the logic of operating way of whole game
+        """
         mouse_coord = pg.mouse.get_pos()    #mouse coord value
         mouse_move = False      #mouse move Boolean value
         mouse_click = 0         #mouse click value (1: left, 2: scroll, 3: right, 4: scroll up, 5: scroll down)
@@ -433,9 +434,9 @@ class Game:
                     self.screen_value[2] = 0
 
     def draw(self):     # Game Loop - Draw
-    """
-        This function is used for drawing all of the object having in the game by using the sub functions such as draw_screen, draw_text,...
-    """
+        """
+            This function is used for drawing all of the object having in the game by using the sub functions such as draw_screen, draw_text,...
+        """
         self.background = pg.Surface((WIDTH, HEIGHT))           #white background
         self.background = self.background.convert()
         self.background.fill(WHITE)
@@ -445,7 +446,7 @@ class Game:
         pg.display.update()
 
     def draw_screen(self):                    # Draw Screen
-    """This funciton is used for drawing out screens corresponding to design"""
+        """This funciton is used for drawing out screens corresponding to design"""
         screen_alpha = self.screen_value[0]
 
         if self.screen_mode == 0:       #logo screen1
