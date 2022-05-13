@@ -1,7 +1,7 @@
 import pygame as pg
-import os, time, random
+import os, random
 from source import Shot, Spritesheet
-TITLE = "4 Beats"      # default setting
+TITLE = "Circle Beats"      # default setting
 WIDTH = 640
 HEIGHT = 480
 FPS = 60
@@ -12,16 +12,28 @@ BLACK = (32, 36, 32)
 RED = (246, 36, 74)
 BLUE = (32, 105, 246)
 MAROON = (128, 0, 0)
-ALPHA_MAX = 255
+VALUE_MAX = 255
 
 class Game:
+    """This class is used for control all of the user's action done on game's window
+
+       """
     def __init__(self): # Game Start
+    """  This class has the common variables is:
+      - self.screen: set up screen size
+      -  self.screen: set up the mode of screens that are setting in our gameF
+      - self.screen_value: manage the screen value matrix
+      - self.clock:  using the module clock in order to compute the time when the game starts
+      - self.running: the boolean value for initialize the game
+      - self.language_mode: set up the type of language that is provide for user
+      - self.song_select: manage the song is chosen
+      """
         pg.init()
         pg.mixer.init()     #sound mixer
         pg.display.set_caption(TITLE)       #title name
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))      #screen size
         self.screen_mode = 0    #screen mode (0: welcome screen, 1: logo screen, 2: menu, 3: song select, 4: play, 5: score)
-        self.screen_value = [-ALPHA_MAX, 0, 0, 0]       #screen management value
+        self.screen_value = [-VALUE_MAX, 0, 0, 0]       #screen management value
         self.clock = pg.time.Clock()        #FPS timer
         self.start_tick = 0     #game timer
         self.running = True     #game initialize Boolean value
@@ -32,6 +44,10 @@ class Game:
         pg.mixer.music.load(self.start_bgm)
 
     def load_data(self): # Data Loading
+        """This function is used for load data from which is used for initializing game such as:
+               - Load the image
+               - Load the backgroud music, mouse click sound ...
+               - Load the font is used for the game as well as the text(language.ini) is used to render out as button so that user can click"""
         self.dir = os.path.dirname(__file__)
 
         # font
@@ -54,8 +70,8 @@ class Game:
         # sound
         self.sound_dir = os.path.join(self.dir, 'sound')
         self.start_bgm = os.path.join(self.sound_dir, 'start_bgm.mp3')
-        self.sound_win = os.path.join(self.sound_dir, 'win.wav')
-        self.sound_lose = os.path.join(self.sound_dir, 'lose.wav')
+        self.sound_win = pg.mixer.Sound(os.path.join(self.sound_dir, 'win.wav'))
+        self.sound_lose = pg.mixer.Sound(os.path.join(self.sound_dir, 'lose.wav'))
         self.sound_click = pg.mixer.Sound(os.path.join(self.sound_dir, 'click.ogg'))
         self.sound_drum1 = pg.mixer.Sound(os.path.join(self.sound_dir, 'drum1.wav'))
         self.sound_drum2 = pg.mixer.Sound(os.path.join(self.sound_dir, 'drum2.wav'))
@@ -99,6 +115,15 @@ class Game:
                 self.song_dataPath.append(-1)
 
     def new(self):      # Game Initialize
+    """
+        This function is used for initializing the game when user start playing the game
+        This function includes these parameters:
+          - self.song_data: save the data of list song
+          - self.song_dataLen: save the length of list song_data
+          - self.song_dataIndex: save the index of song that is in the song data list
+          - self.circle_dir: save the direction of the circle when user play the game
+          - self.circle_rot: save the rotation value corresponding to the value of circle direction
+    """
         self.song_data = list()     #song data list
         self.song_dataLen = 0       #song data len
         self.song_dataIndex = 0     #song data index
@@ -109,6 +134,14 @@ class Game:
         self.shots = pg.sprite.Group()
 
     def run(self):      # Game Loop
+    """
+        This function is used for keeping game playing unless user choses to exit with options are provided in the game
+        Moreover this function also term the way that game is operated such as:
+        - Move to other screen
+        - Catch the user's actions
+        - Catch the mouse's position
+        In conclusion this function stipulate out the logic of operating way of whole game
+    """
         self.playing = True
 
         while self.playing:
@@ -121,10 +154,20 @@ class Game:
         pg.mixer.music.fadeout(600)
 
     def update(self):   # Game Loop - Update
+        """
+            This function is used for updating screen value as well as time of game when the game objects have changes
+        """
         self.all_sprites.update()       #screen update
         self.game_tick = pg.time.get_ticks() - self.start_tick      #play time calculation
 
     def events(self):   # Game Loop - Events
+    """
+        This function also term the way that game is operated such as:
+        - Move to other screen
+        - Catch the user's actions
+        - Catch the mouse's position
+        In conclusion this function stipulate out the logic of operating way of whole game
+    """
         mouse_coord = pg.mouse.get_pos()    #mouse coord value
         mouse_move = False      #mouse move Boolean value
         mouse_click = 0         #mouse click value (1: left, 2: scroll, 3: right, 4: scroll up, 5: scroll down)
@@ -149,22 +192,22 @@ class Game:
                     self.sound_click.play()
 
         if self.screen_mode == 0:           # Logo Screen1
-            self.screen_value[0] += ALPHA_MAX / 51
+            self.screen_value[0] += VALUE_MAX / 51
 
-            if self.screen_value[0] == ALPHA_MAX:
+            if self.screen_value[0] == VALUE_MAX:
                 self.screen_value[0] = 0
                 self.screen_mode = 1
                 pg.mixer.music.play(loops = -1)
         elif self.screen_mode == 1:             # Logo Screen2
             if self.screen_value[3] == 0:
-                if self.screen_value[0] < ALPHA_MAX:
-                    self.screen_value[0] += ALPHA_MAX / 51
+                if self.screen_value[0] < VALUE_MAX:
+                    self.screen_value[0] += VALUE_MAX / 51
                 else:
                     if mouse_click == 1 or key_click != 0:
                         self.screen_value[3] = 1
             else:
                 if self.screen_value[0] > 0:
-                    self.screen_value[0] -= ALPHA_MAX / 15
+                    self.screen_value[0] -= VALUE_MAX / 15
                 else:
                     self.screen_mode = 2
                     self.screen_value[1] = 2
@@ -181,11 +224,11 @@ class Game:
                     self.screen_value[2] -= 1
         elif self.screen_mode == 2:                     # Main Screen
             if self.screen_value[2] == 0:
-                if self.screen_value[0] < ALPHA_MAX:
-                    self.screen_value[0] += ALPHA_MAX / 15
+                if self.screen_value[0] < VALUE_MAX:
+                    self.screen_value[0] += VALUE_MAX / 15
 
                     if self.screen_value[3] > 0:
-                        self.screen_value[3] -= ALPHA_MAX / 15
+                        self.screen_value[3] -= VALUE_MAX / 15
                 else:
                     for i in range(4):
                         if mouse_move and 400 < mouse_coord[0] < 560 and 105 + i*70 < mouse_coord[1] < 155 + i*70:      #mouse cursor check
@@ -200,7 +243,7 @@ class Game:
                         if self.screen_value[1] == 1:       #START
                             self.screen_value[2] = 1
                         elif self.screen_value[1] == 2:     #HELP
-                            self.screen_value[0] = ALPHA_MAX / 3
+                            self.screen_value[0] = VALUE_MAX / 3
                             self.screen_value[2] = 2
                         elif self.screen_value[1] == 3:     #EXIT
                             self.screen_value[2] = 3
@@ -209,7 +252,7 @@ class Game:
                             self.gameFont = os.path.join(self.font_dir, self.load_language(1))
             elif self.screen_value[2] == 1:
                 if self.screen_value[0] > 0:
-                    self.screen_value[0] -= ALPHA_MAX / 15
+                    self.screen_value[0] -= VALUE_MAX / 15
                 else:
                     self.screen_mode = 3
                     self.screen_value[1] = 0
@@ -225,13 +268,13 @@ class Game:
                     self.screen_value[2] = 0
             elif self.screen_value[2] == 3:
                 if self.screen_value[0] > 0:
-                    self.screen_value[0] -= ALPHA_MAX / 15
+                    self.screen_value[0] -= VALUE_MAX / 15
                 else:
                     self.playing, self.running = False, False
         elif self.screen_mode == 3:                     ### Song Select Screen
             if self.screen_value[2] == 0:
-                if self.screen_value[0] < ALPHA_MAX:
-                    self.screen_value[0] += ALPHA_MAX / 15
+                if self.screen_value[0] < VALUE_MAX:
+                    self.screen_value[0] += VALUE_MAX / 15
 
                 self.screen_value[1] = 0
                 songChange = False
@@ -282,7 +325,7 @@ class Game:
                         pg.mixer.music.play(loops = -1)
             else:
                 if self.screen_value[0] > 0:
-                    self.screen_value[0] -= ALPHA_MAX / 15
+                    self.screen_value[0] -= VALUE_MAX / 15
                 else:
                     if self.screen_value[2] == 1:
                         self.screen_mode = 4
@@ -294,7 +337,7 @@ class Game:
                         self.screen_mode = 2
                         self.screen_value[1] = 0
                         self.screen_value[2] = 0
-                        self.screen_value[3] = ALPHA_MAX
+                        self.screen_value[3] = VALUE_MAX
                         pg.mixer.music.load(self.start_bgm)
                         pg.mixer.music.play(loops = -1)
         elif self.screen_mode == 4:
@@ -302,10 +345,12 @@ class Game:
                 self.new()
                 self.load_data()
                 self.screen_mode = 3
+                pg.mixer.music.load(self.song_path[self.song_select - 1])
+                pg.mixer.music.play(loops = -1)
             elif(self.screen_mode == 4):                             ### Play Screen
                 if self.screen_value[1] == 0:
-                    if self.screen_value[0] < ALPHA_MAX:
-                        self.screen_value[0] += ALPHA_MAX / 1
+                    if self.screen_value[0] < VALUE_MAX:
+                        self.screen_value[0] += VALUE_MAX / 1
 
                     if (mouse_click == 1):              #mouse clickcheck
                         if mouse_coord[0] < WIDTH / 2:
@@ -344,14 +389,14 @@ class Game:
                     self.create_shot()          #create shot
                 else:
                     if self.screen_value[0] > 0:
-                        self.screen_value[0] -= ALPHA_MAX / 85
+                        self.screen_value[0] -= VALUE_MAX / 85
                     else:
                         self.screen_mode = 5
                         self.screen_value[1] = 0
         else:                             # Score Screen
             if self.screen_value[1] == 0:
-                if self.screen_value[0] < ALPHA_MAX:
-                    self.screen_value[0] += ALPHA_MAX / 15
+                if self.screen_value[0] < VALUE_MAX:
+                    self.screen_value[0] += VALUE_MAX / 15
 
                 if mouse_move:
                     if round(WIDTH / 2 - 160) < mouse_coord[0] < round(WIDTH / 2 - 40) and round(HEIGHT / 2 + 110) < mouse_coord[1] < round(HEIGHT / 2 + 170):
@@ -369,21 +414,28 @@ class Game:
                     self.screen_value[1] = self.screen_value[2]
             else:
                 if self.screen_value[0] > 0:
-                    self.screen_value[0] -= ALPHA_MAX / 15
+                    self.screen_value[0] -= VALUE_MAX / 15
                 else:
                     self.new()
 
                     if self.screen_value[1] == 1:
                         self.screen_mode = 3
+                        pg.mixer.music.load(self.song_path[self.song_select - 1])
+                        pg.mixer.music.play(loops = -1)
                     else:
                         self.screen_mode = 4
                         self.start_tick = pg.time.get_ticks()
                         self.load_songData()
+                        pg.mixer.music.load(self.song_path[self.song_select - 1])
+                        pg.mixer.music.play(loops = -1)
 
                     self.screen_value[1] = 0
                     self.screen_value[2] = 0
 
     def draw(self):     # Game Loop - Draw
+    """
+        This function is used for drawing all of the object having in the game by using the sub functions such as draw_screen, draw_text,...
+    """
         self.background = pg.Surface((WIDTH, HEIGHT))           #white background
         self.background = self.background.convert()
         self.background.fill(WHITE)
@@ -393,6 +445,7 @@ class Game:
         pg.display.update()
 
     def draw_screen(self):                    # Draw Screen
+    """This funciton is used for drawing out screens corresponding to design"""
         screen_alpha = self.screen_value[0]
 
         if self.screen_mode == 0:       #logo screen1
@@ -401,7 +454,7 @@ class Game:
             surface.blit(bg,(0,0))
             self.screen.blit(surface, (0,0))
         elif self.screen_mode == 1:     #logo screen2
-            self.spr_logoback.set_alpha(screen_alpha) if self.screen_value[3] == 0 else self.spr_logoback.set_alpha(ALPHA_MAX)
+            self.spr_logoback.set_alpha(screen_alpha) if self.screen_value[3] == 0 else self.spr_logoback.set_alpha(VALUE_MAX)
             self.screen.blit(self.spr_logoback, (0, 0))
             spr_logoRescale = pg.transform.scale(self.spr_logo, (301 + self.screen_value[1], 306 + self.screen_value[1]))
             self.draw_sprite(((WIDTH - self.screen_value[1]) / 2, 40 - self.screen_value[1] / 2), spr_logoRescale, screen_alpha)
@@ -409,10 +462,10 @@ class Game:
             select_index = [True if self.screen_value[1] == i + 1 else False for i in range(4)]
 
             if self.screen_value[2] == 0:
-                self.draw_sprite((0, 0), self.spr_logoback, ALPHA_MAX - self.screen_value[3])
+                self.draw_sprite((0, 0), self.spr_logoback, VALUE_MAX - self.screen_value[3])
             else:
                 self.spr_logoback.set_alpha(screen_alpha)
-                logoback_coord = 0 if self.screen_value[2] == 2 else round((screen_alpha - ALPHA_MAX) / 10)
+                logoback_coord = 0 if self.screen_value[2] == 2 else round((screen_alpha - VALUE_MAX) / 10)
                 self.screen.blit(self.spr_logoback, (logoback_coord, 0))
 
             if self.screen_value[2] == 2:
@@ -502,28 +555,36 @@ class Game:
                 bg = pg.image.load(os.path.join(self.img_dir, 'bg_end_done.png'))
                 surface.blit(bg,(0,0))
                 self.screen.blit(surface, (0,0))
-                pg.mixer.music.load(self.start_bgm)
-                pg.mixer.music.play()
+                self.sound_win.play()
             else:
                 bg = pg.image.load(os.path.join(self.img_dir, 'bg_end_cry.png'))
                 surface.blit(bg,(0,0))
                 self.screen.blit(surface, (0,0))
+                self.sound_lose.play()
                 self.draw_text(self.load_language(15) + " : " + str(self.song_perfectScore[self.song_select - 1]), 32, BLACK, WIDTH / 2, HEIGHT / 2 - 65, screen_alpha)
                 self.draw_text("Your " + self.load_language(13) + " : " + str(self.score), 32, BLACK, WIDTH / 2, HEIGHT / 2 - 5, screen_alpha)
-                pg.mixer.music.load(self.start_bgm)
-                pg.mixer.music.play()
+
             select_index = [True if self.screen_value[2] == i + 1 else False for i in range(2)]
-            # self.screen.blit(surface, (0,0))
-            self.draw_text(self.load_language(17), 24, BLACK, WIDTH / 2 - 100, HEIGHT / 2 + 125, ALPHA_MAX, select_index[0])
-            self.draw_text(self.load_language(16), 24, BLACK, WIDTH / 2 + 100, HEIGHT / 2 + 125, ALPHA_MAX, select_index[1])
+            pg.mixer.music.fadeout(600)
+            self.draw_text(self.load_language(17), 24, BLACK, WIDTH / 2 - 100, HEIGHT / 2 + 125, VALUE_MAX, select_index[0])
+            self.draw_text(self.load_language(16), 24, BLACK, WIDTH / 2 + 100, HEIGHT / 2 + 125, VALUE_MAX, select_index[1])
 
     def load_language(self, index):
+        """
+            This function is used for load the text written in the file language.ini.
+            - Specifically, each of line in this file includes the text is written in different type of language (english, japanese,...)
+            - The text of each line includes the text that will render on the screen by using other function
+            - If the text is not written in the right way, the text will be replace with the text "Font error"
+        """
         try:
             return self.language_list[self.language_mode][index]
         except:
             return "Font Error"
 
     def load_songData(self):
+        """This function is used for loading the data of song from the file that is loaded before
+           This function terms the shot data used for playing process such as color, direction, radius,...
+        """
         with open(self.song_dataPath[self.song_select - 1], "r", encoding = 'UTF-8') as data_file:
             data_fileLists = data_file.read().split('\n')
 
@@ -575,6 +636,9 @@ class Game:
                 self.song_data.append(current_songData)
 
     def create_shot(self):
+        """
+            This function is used for creating the shot while user is playing the game as well as save the score that user got while playing
+        """
         if self.game_tick >= self.song_data[self.song_dataIndex][0]:
             if self.song_data[self.song_dataIndex][1] != -1:
                 shot_num = len(self.song_data[self.song_dataIndex]) - 1
@@ -605,7 +669,10 @@ class Game:
 
                 self.screen_value[1] = 1
 
-    def draw_sprite(self, coord, spr, alpha = ALPHA_MAX, rot = 0):
+    def draw_sprite(self, coord, spr, alpha = VALUE_MAX, rot = 0):
+        """
+            This function is used to render out the image that having in the game such as logoback, circle,...
+        """
         if rot == 0:
             spr.set_alpha(alpha)
             self.screen.blit(spr, (round(coord[0]), round(coord[1])))
@@ -614,7 +681,10 @@ class Game:
             rotated_spr.set_alpha(alpha)
             self.screen.blit(rotated_spr, (round(coord[0] + spr.get_width() / 2 - rotated_spr.get_width() / 2), round(coord[1] + spr.get_height() / 2 - rotated_spr.get_height() / 2)))
 
-    def draw_text(self, text, size, color, x, y, alpha = ALPHA_MAX, boldunderline = False):
+    def draw_text(self, text, size, color, x, y, alpha = VALUE_MAX, boldunderline = False):
+        """
+            This function is used for render out the text that having in the game such as menu, song list, button,...
+        """
         try:
             font = pg.font.Font(self.gameFont, size)
         except:
@@ -626,7 +696,7 @@ class Game:
         text_rect = text_surface.get_rect()
         text_rect.midtop = (round(x), round(y))
 
-        if (alpha == ALPHA_MAX):
+        if (alpha == VALUE_MAX):
             self.screen.blit(text_surface, text_rect)
         else:
             surface = pg.Surface((len(text) * size, size + 20))
