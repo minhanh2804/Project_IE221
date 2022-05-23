@@ -45,7 +45,7 @@ class Game:
         pg.mixer.music.load(self.start_bgm)
 
     def load_data(self): # Data Loading
-        """This function is used for load data from which is used for initializing game such as:
+        """This function is used for load data from file which is used for initializing game such as:
                - Load the image
                - Load the backgroud music, mouse click sound ...
                - Load the font is used for the game as well as the text(language.ini) is used to render out as button so that user can click"""
